@@ -1,21 +1,19 @@
-// Importation de toutes tes scènes (vérifie que les noms de fichiers correspondent)
-import { Hub } from './Hub.js';
-import { Champignon } from './Champignon.js';
-import { Jungle } from './Jungle.js';
-import { Demon } from './Demon.js';
+import { Hub } from './hub.js';
 
 const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    parent: 'mon-jeu', // <--- Ici, tu mets l'ID de la div que tu as créée
+    parent: 'game-container', // Doit correspondre à l'ID dans ton HTML
     pixelArt: true,
     physics: {
         default: 'arcade',
-        arcade: { gravity: { y: 0 } }
+        arcade: {
+            gravity: { y: 0 },
+            debug: true // Affiche les box de collision en rose pour tester
+        }
     },
-    scene: [Hub, Champignon, Jungle, Demon]
+    scene: [Hub]
 };
 
-// Initialisation du jeu
-const game = new Phaser.Game(config);
+new Phaser.Game(config);
