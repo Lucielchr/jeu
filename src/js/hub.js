@@ -58,3 +58,9 @@ export class Hub extends Phaser.Scene {
         this.player.body.velocity.normalize().scale(speed);
     }
 }
+
+
+// Si le perso tombe dans le trou (mettons aux coordonnées X: 1504, Y: 1312)
+if (Phaser.Math.Distance.Between(this.player.x, this.player.y, 1504, 1312) < 64) {
+    this.scene.start('Champignon1');
+}
