@@ -1,3 +1,12 @@
+import Jungle from "./js/jungle.js";
+import Champignon from "./js/champignon.js";
+import Demon from "./js/demon.js";
+
+let gameState = {
+    items: {
+        cisaille: false
+    }
+};
 var config = {
   type: Phaser.AUTO,
   width: 800, 
