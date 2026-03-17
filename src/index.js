@@ -1,4 +1,6 @@
 import { Hub } from './hub.js';
+import { MapLucie } from './map_lucie.js';
+import { MapLucie2 } from './map_lucie2.js';
 
 const config = {
     type: Phaser.AUTO,
