@@ -1,25 +1,38 @@
-function creat(){
-    // récupérer le calque d’objets "doors"
-const objectsLayer = map.getObjectLayer("doors");
+export class Hub extends Phaser.Scene {
+    constructor() { super({ key: 'hub' }); }
 
-// groupe de portes
-this.doors = this.physics.add.staticGroup();
+    create() {
+        this.physics.world.gravity.y = 0;
+        const map = this.make.tilemap({ key: 'map-hub' });
+        const tileset = map.addTilesetImage('tileset_hub', 'tiles-hub');
+        const obstacles = map.createLayer('Obstacles', tileset, 0, 0);
 
-// créer les zones de portes
-objectsLayer.objects.forEach(obj => {
+        // On active les collisions pour le calque obstacles
+        obstacles.setCollisionByExclusion([-1]);
 
-    const door = this.doors.create(obj.x, obj.y, null)
-        .setSize(obj.width, obj.height)
-        .setOrigin(0);
+        this.player = this.physics.add.sprite(400, 300, 'player');
+        this.physics.add.collider(this.player, obstacles);
+        this.cursors = this.input.keyboard.createCursorKeys();
 
-    // récupérer le target depuis Tiled
-    const target = obj.properties.find(p => p.name === "target").value;
+        // --- DÉTECTION DES TUILES PORTES ---
+        // Remplace 12, 13 et 14 par les vrais IDs de tes tuiles dans Tiled
+        obstacles.setTileIndexCallback(12, () => this.scene.start('Champignon'), this);
+        obstacles.setTileIndexCallback(13, () => {
+            if (this.registry.get('inventory')?.hasCisaille) this.scene.start('Jungle');
+            else console.log("Bloqué ! Il faut la cisaille.");
+        }, this);
+        obstacles.setTileIndexCallback(14, () => {
+            if (this.registry.get('inventory')?.hasEpee) this.scene.start('Demon');
+            else console.log("Bloqué ! Il faut l'épée.");
+        }, this);
+    }
 
-    door.setData("target", target);
-});
-
-// collision joueur / porte
-this.physics.add.overlap(this.player, this.doors, (player, door) => {
-    this.scene.start(door.getData("target"));
-});
+    update() {
+        this.player.setVelocity(0);
+        if (this.cursors.left.isDown) this.player.setVelocityX(-160);
+        else if (this.cursors.right.isDown) this.player.setVelocityX(160);
+        if (this.cursors.up.isDown) this.player.setVelocityY(-160);
+        else if (this.cursors.down.isDown) this.player.setVelocityY(160);
+        this.player.body.velocity.normalize().scale(160);
+    }
 }

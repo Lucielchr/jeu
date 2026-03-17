@@ -1,28 +1,35 @@
-export default class Champignon extends Phaser.Scene {
-    constructor() {
-        super("Champignon");
-        this.input.keyboard.on("keydown-ESC", () => {
-        this.scene.start("Hub");
-});
-    }
-
-    preload() {
-        this.load.tilemapTiledJSON("mapChamp", "src/asset/champignon.json");
-        this.load.image("tiles", "src/asset/tuilesJeu (3).png");
-        this.load.image("player", "src/asset/yoshi.png");
-    }
+export class champignon extends Phaser.Scene {
+    constructor() { super({ key: 'champignon' }); }
 
     create() {
-        const map = this.make.tilemap({ key: "mapChamp" });
+        this.physics.world.gravity.y = 800; // Gravité active
+        
+        const map = this.make.tilemap({ key: 'map-champ' });
+        const tileset = map.addTilesetImage('tiles_plateforme', 'tiles-img');
+        const sol = map.createLayer('Sol', tileset, 0, 0);
+        sol.setCollisionByExclusion([-1]);
 
-        const tileset = map.addTilesetImage("tuilesJeu (3)", "tiles");
+        this.player = this.physics.add.sprite(100, 500, 'player');
+        this.physics.add.collider(this.player, sol);
+        this.cursors = this.input.keyboard.createCursorKeys();
 
-        const layer = map.createLayer("parcours", tileset);
+        // L'objet à ramasser (ici la cisaille)
+        this.cisaille = this.physics.add.sprite(700, 400, 'cisaille');
+        this.physics.add.overlap(this.player, this.cisaille, () => {
+            let inv = this.registry.get('inventory') || { hasCisaille: false, hasEpee: false };
+            inv.hasCisaille = true;
+            this.registry.set('inventory', inv);
+            this.scene.start('hub'); // Retour au Hub
+        });
+    }
 
-        layer.setCollisionByProperty({ estSolide: true });
+    update() {
+        if (this.cursors.left.isDown) this.player.setVelocityX(-200);
+        else if (this.cursors.right.isDown) this.player.setVelocityX(200);
+        else this.player.setVelocityX(0);
 
-        this.player = this.physics.add.sprite(100, 200, "player");
-
-        this.physics.add.collider(this.player, layer);
+        if (this.cursors.up.isDown && this.player.body.onFloor()) {
+            this.player.setVelocityY(-500); // Saut
+        }
     }
 }
