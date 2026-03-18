@@ -1,4 +1,7 @@
-import { Hub } from './hub.js';
+import { Hub } from './js/hub.js';
+import { Champignon1 } from './js/champignon1.js';
+import { Champignon2 } from './js/champignon2.js';
+import {Jungle} from './js/jungle.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -13,7 +16,7 @@ const config = {
             debug: true // Affiche les box de collision en rose pour tester
         }
     },
-    scene: [Hub]
+    scene: [Hub, Champignon1, Champignon2, Jungle] // Ajoute tes scènes ici
 };
 
 new Phaser.Game(config);

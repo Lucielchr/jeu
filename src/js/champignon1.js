@@ -2,9 +2,9 @@ export class Champignon1 extends Phaser.Scene {
     constructor() { super({ key: 'Champignon1' }); }
 
     preload() {
-        this.load.image('tiles-lucie', 'assets/image_139dfa.png');
-        this.load.tilemapTiledJSON('map-lucie', 'assets/map_lucie.tmj');
-        this.load.image('tuyau', 'assets/tuyaux.png');
+        this.load.image('tiles-lucie', 'src/asset/image_139dfa.png');
+        this.load.tilemapTiledJSON('map-lucie', 'src/asset/map_lucie.json');
+        this.load.image('tuyau', 'src/asset/tuyaux.png');
     }
 
     create() {

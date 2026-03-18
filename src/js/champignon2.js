@@ -2,9 +2,9 @@ export class Champignon2 extends Phaser.Scene {
     constructor() { super({ key: 'Champignon2' }); }
 
     preload() {
-        this.load.image('bloc', 'assets/bloc.png');
-        this.load.image('carapace', 'assets/carapace.png'); // Ajoute une image de carapace
-        this.load.image('tuyau', 'assets/tuyaux.png');
+        this.load.image('bloc', 'src/asset/bloc.png');
+        this.load.image('carapace', 'src/asset/carapace.png'); // Ajoute une image de carapace
+        this.load.image('tuyau', 'src/asset/tuyaux.png');
     }
 
     create() {

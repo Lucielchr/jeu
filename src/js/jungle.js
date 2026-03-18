@@ -1,9 +1,7 @@
-export default class Jungle extends Phaser.Scene {
+export class Jungle extends Phaser.Scene {
     constructor() {
-        super("Jungle"); // NOM IMPORTANT
-        this.input.keyboard.on("keydown-ESC", () => {
-        this.scene.start("Hub");
-        });
+        super({ key: 'Jungle' }); // NOM IMPORTANT
+        
     }
 
     preload() {

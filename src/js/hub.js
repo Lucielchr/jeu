@@ -5,20 +5,20 @@ export class Hub extends Phaser.Scene {
 
     preload() {
         // 1. On charge la carte (Le cerveau du niveau)
-        this.load.tilemapTiledJSON('map-hub', 'src/assets/hub_jeu.json');
+        this.load.tilemapTiledJSON('map-hub', './src/asset/hub_jeu.json');
 
         // 2. On charge tes 7 images (Tes briques de construction)
         // REMPLACE BIEN LES NOMS DES .PNG PAR TES VRAIS FICHIERS
-        this.load.image('img1', 'src/assets/4.png');
-        this.load.image('img2', 'src/assets/Assets_source.png');
-        this.load.image('img3', 'src/assets/Brown_ruins1.png');
-        this.load.image('img4', 'src/assets/green trees.png');
-        this.load.image('img5', 'src/assets/pine-none06.png');
-        this.load.image('img6', 'src/assets/pisilohe10.png');
-        this.load.image('img7', 'src/assets/terrain.png');
+        this.load.image('img1', 'src/asset/4.png');
+        this.load.image('img2', 'src/asset/Assets_source.png');
+        this.load.image('img3', 'src/asset/Brown_ruins1.png');
+        this.load.image('img4', 'src/asset/green trees.png');
+        this.load.image('img5', 'src/asset/pine-none06.png');
+        this.load.image('img6', 'src/asset/pisilohe10.png');
+        this.load.image('img7', 'src/asset/terrain.png');
 
         // 3. Le personnage
-        this.load.spritesheet('player', 'src/assets/Male 16-1.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('player', 'src/asset/Male 16-1.png', { frameWidth: 32, frameHeight: 32 });
     }
 
     create() {
@@ -190,7 +190,7 @@ export class Hub extends Phaser.Scene {
             this.texteAide.setText("Appuie sur E pour entrer au Niveau 1"); // On force le texte ici
             this.texteAide.setVisible(true);
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                this.scene.start('Niveau1');
+                this.scene.start('champignon1');
             }
         }
 
@@ -202,7 +202,7 @@ export class Hub extends Phaser.Scene {
                 this.texteAide.setText("Appuie sur E pour entrer au Niveau 2");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                    this.scene.start('Niveau2');
+                    this.scene.start('jungle');
                 }
             } else {
                 this.texteAide.setText("OULALA IL Y A TROP DE BROUSSAILLES, il faudrait une cisaille !");
@@ -234,7 +234,7 @@ export class Hub extends Phaser.Scene {
                 this.texteAide.setText("Le passage est libre ! Appuie sur E pour entrer au Niveau 3");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                    this.scene.start('Niveau3');
+                    this.scene.start('demon');
                 }
             }
         }
