@@ -229,7 +229,7 @@
         {
          "columns":39,
          "firstgid":1,
-         "image":"champignon du fond .png",
+         "image":"..\/..\/..\/VSC\/PROJET\/jeu\/src\/asset\/champignon du fond .png",
          "imageheight":1098,
          "imagewidth":1266,
          "margin":0,
@@ -243,7 +243,7 @@
         {
          "columns":25,
          "firstgid":1327,
-         "image":"fond_lulu.png",
+         "image":"..\/..\/..\/VSC\/PROJET\/jeu\/src\/asset\/fond_lulu.png",
          "imageheight":480,
          "imagewidth":800,
          "margin":0,
@@ -257,7 +257,7 @@
         {
          "columns":42,
          "firstgid":1702,
-         "image":"mimi.png",
+         "image":"..\/..\/..\/VSC\/PROJET\/jeu\/src\/asset\/mimi.png",
          "imageheight":784,
          "imagewidth":1362,
          "margin":0,
@@ -271,11 +271,11 @@
         {
          "columns":59,
          "firstgid":2710,
-         "image":"plat .png",
+         "image":"..\/..\/..\/VSC\/PROJET\/jeu\/src\/asset\/plat.png",
          "imageheight":1198,
          "imagewidth":1906,
          "margin":0,
-         "name":"plat ",
+         "name":"plat",
          "properties":[
                 {
                  "name":"estSolide",
@@ -292,7 +292,12 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -302,6 +307,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -311,6 +321,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -320,6 +335,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -329,6 +349,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -338,6 +363,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -347,6 +377,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -356,6 +391,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -365,6 +405,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -374,6 +419,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -382,7 +432,12 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"bleu"
                         }]
                 }, 
                 {
@@ -391,7 +446,12 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -401,6 +461,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -410,6 +475,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -419,6 +489,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -428,6 +503,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -437,6 +517,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -446,6 +531,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -455,6 +545,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -464,6 +559,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -473,6 +573,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -481,7 +586,12 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rouge"
                         }]
                 }, 
                 {
@@ -490,7 +600,12 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -500,6 +615,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -509,6 +629,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -518,6 +643,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -527,6 +657,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -536,6 +671,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -545,6 +685,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -554,6 +699,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -563,6 +713,11 @@
                          "name":"estSolide",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }, 
                 {
@@ -571,7 +726,12 @@
                         {
                          "name":"estSolide",
                          "type":"bool",
-                         "value":true
+                         "value":false
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rose"
                         }]
                 }],
          "tilewidth":32,
@@ -580,7 +740,7 @@
         {
          "columns":3,
          "firstgid":4893,
-         "image":"donjonfin_lulu.png",
+         "image":"..\/..\/..\/VSC\/PROJET\/jeu\/src\/asset\/donjonfin_lulu.png",
          "imageheight":112,
          "imagewidth":100,
          "margin":0,

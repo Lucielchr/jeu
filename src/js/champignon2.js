@@ -1,48 +1,127 @@
 export class Champignon2 extends Phaser.Scene {
-    constructor() { super({ key: 'Champignon2' }); }
+    constructor() { super('Champignon2'); }
 
     preload() {
-        this.load.image('bloc', 'src/asset/bloc.png');
-        this.load.image('carapace', 'src/asset/carapace.png'); // Ajoute une image de carapace
+        this.load.spritesheet('yoshi', 'src/asset/yoshi.png', { frameWidth: 248, frameHeight: 385 });
         this.load.image('tuyau', 'src/asset/tuyaux.png');
+        this.load.image('bloc_img', 'src/asset/bloc.png');
+        this.load.image('feu_img', 'src/asset/feu.png');
+        this.load.image('coffre_img', 'src/asset/coffre_rouge.png');
+        this.load.image('ciseaux_img', 'src/asset/Ciseaux.png');
+        this.load.tilemapTiledJSON('map2', 'src/asset/map_lucie2.tmj');
+        this.load.image('tuiles_img', 'src/asset/plat.png');
+        this.load.image('fond_champignon', 'src/asset/champignon du fond .png');
     }
 
     create() {
+        this.cameras.main.fadeIn(1000, 0, 0, 0);
+
         this.physics.world.gravity.y = 800;
-        // ... (Code chargement Map Lucie 2 identique à la 1 pour les calques)
 
-        this.blocks = this.physics.add.staticGroup(); 
-        this.carapaces = this.physics.add.group();
+        const map = this.make.tilemap({ key: 'map2' });
+        const tsPlat = map.addTilesetImage('plat', 'tuiles_img');
+        const tsFond = map.addTilesetImage('champignon du fond ', 'fond_champignon');
+        const allTilesets = [tsPlat, tsFond];
+        
+        map.createLayer('fond', allTilesets, 0, 0);
+        map.createLayer('tiges des plateformes', allTilesets, 0, 0);
+        const platRose = map.createLayer('champignon_rose', allTilesets, 0, 0);
+        const platRouge = map.createLayer('champignon_rouge', allTilesets, 0, 0);
+        const platBleu = map.createLayer('champignon_bleu', allTilesets, 0, 0);
 
-        // On crée les blocs (tu peux aussi les placer via des Objets dans Tiled)
-        this.blocks.create(1800, 500, 'bloc');
+        if (platRose) platRose.setCollisionByProperty({ estSolide: true });
+        if (platRouge) platRouge.setCollisionByProperty({ estSolide: true });
+        if (platBleu) platBleu.setCollisionByProperty({ estSolide: true });
 
-        // Lancer de carapace
-        this.input.keyboard.on('keydown-A', () => {
-            let vx = this.player.flipX ? -400 : 400;
-            let cara = this.carapaces.create(this.player.x, this.player.y, 'carapace');
-            cara.setVelocityX(vx);
-            cara.setBounce(1); // La carapace rebondit sur les murs
-            cara.setCollideWorldBounds(true);
-        });
+        this.spawnPoint = { x: 130, y: 70 };
+        this.player = this.physics.add.sprite(this.spawnPoint.x, this.spawnPoint.y, 'yoshi');
+        this.player.setDisplaySize(50, 70).setCollideWorldBounds(true);
+        
+        // --- BLOCS SOLIDES À DÉTRUIRE ---
+        this.blocks = this.physics.add.group();
+        for(let i = 0; i < 4; i++) {
+            let b = this.blocks.create(1400, 280 - (i * 40), 'bloc_img');
+            b.setDisplaySize(40, 40).setImmovable(true);
+            b.body.allowGravity = false;
+        }
+        this.physics.add.collider(this.player, this.blocks);
 
-        // Collision carapace casse le bloc
-        this.physics.add.overlap(this.carapaces, this.blocks, (cara, bloc) => {
-            bloc.destroy();
-            cara.destroy();
-        });
+        if (platBleu) this.physics.add.collider(this.player, platBleu, () => { if (this.player.body.blocked.down) this.player.setVelocityY(-400); });
+        if (platRouge) this.physics.add.collider(this.player, platRouge, () => { if (this.player.body.blocked.down) this.player.setVelocityY(-650); });
+        if (platRose) this.physics.add.collider(this.player, platRose);
 
-        // Tuyau de retour (en haut à gauche)
-        this.tuyauRetour = this.physics.add.staticImage(50, 50, 'tuyau');
+        this.tuyauRetour = this.physics.add.staticImage(96, -20, 'tuyau').setFlipY(true);
+        this.tuyauRetour.body.updateFromGameObject(); 
+        this.physics.add.collider(this.player, this.tuyauRetour);
+
+        this.coffre = this.physics.add.staticSprite(1440, 256, 'coffre_img').setDisplaySize(60, 60).setVisible(false);
+        this.ciseaux = this.physics.add.staticSprite(1440, 200, 'ciseaux_img').setDisplaySize(40, 40).setVisible(false);
+        this.hasCiseaux = false;
+
+        this.fireballs = this.physics.add.group();
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.physics.add.collider(this.fireballs, this.blocks, (ball, block) => { ball.destroy(); block.destroy(); if (this.blocks.countActive() === 0) this.coffre.setVisible(true); });
+        this.physics.add.overlap(this.player, this.coffre, () => { if (this.coffre.visible && !this.hasCiseaux) this.ciseaux.setVisible(true); });
+        this.physics.add.overlap(this.player, this.ciseaux, () => { if (this.ciseaux.visible) { this.ciseaux.destroy(); this.hasCiseaux = true; this.cameras.main.flash(500, 255, 255, 255); } });
+
+        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        
+        // Autoriser Yoshi à sortir par le bas pour le respawn
+        this.physics.world.setBoundsCollision(true, true, true, false); 
+        this.isExiting = false;
     }
 
     update() {
-        // ... contrôles joueur ...
+        if (this.isExiting) return;
+        if (this.cursors.left.isDown) { this.player.setVelocityX(-250); this.player.anims.play('anim_tourne_gauche', true); }
+        else if (this.cursors.right.isDown) { this.player.setVelocityX(250); this.player.anims.play('anim_tourne_droite', true); }
+        else { this.player.setVelocityX(0); this.player.anims.play('anim_face'); }
         
-        // Retour vers Champignon1
-        if (Phaser.Math.Distance.Between(this.player.x, this.player.y, this.tuyauRetour.x, this.tuyauRetour.y) < 50 
-            && this.cursors.up.isDown) {
-            this.scene.start('Champignon1');
+        if (this.cursors.up.isDown && this.player.body.blocked.down) this.player.setVelocityY(-550);
+        if (Phaser.Input.Keyboard.JustDown(this.keyA)) this.lancerFeu();
+
+        // Sortie par le tuyau
+        if (Phaser.Geom.Intersects.RectangleToRectangle(this.player.getBounds(), this.tuyauRetour.getBounds())) {
+            if (this.cursors.up.isDown) {
+                if (this.hasCiseaux) {
+                    this.isExiting = true;
+                    this.cameras.main.fadeOut(1000, 0, 0, 0);
+                    this.cameras.main.once('camerafadeoutcomplete', () => { this.scene.start('Champignon1', { questComplete: true }); });
+                } else {
+                    // MESSAGE D'ALERTE CORRIGÉ
+                    this.afficherBulleAlerte(this.cameras.main.centerX, 500, "Vous devez d'abord trouver les ciseaux");
+                }
+            }
         }
+        
+        // Mort si on tombe
+        if (this.player.y > this.physics.world.bounds.height + 50) this.resetPlayer();
+    }
+
+    resetPlayer() {
+        this.cameras.main.flash(400, 200, 0, 0); 
+        this.player.setPosition(this.spawnPoint.x, this.spawnPoint.y);
+        this.player.setVelocity(0, 0);
+        this.player.anims.play('anim_face');
+    }
+
+    lancerFeu() {
+        let vx = this.player.flipX ? -600 : 600;
+        let ball = this.fireballs.create(this.player.x, this.player.y, 'feu_img').setDisplaySize(30, 30).setVelocityX(vx);
+        ball.body.allowGravity = false;
+        this.time.delayedCall(1500, () => { if(ball.active) ball.destroy(); });
+    }
+
+    afficherBulleAlerte(x, y, message) {
+        if (this.alerteActive) return;
+        this.alerteActive = true;
+        let texte = this.add.text(0, 0, message, { fontSize: '20px', fill: '#000000', fontFamily: 'Arial' }).setDepth(102);
+        let bg = this.add.graphics().fillStyle(0xffffff, 1).fillRoundedRect(x - (texte.width+40)/2, y - (texte.height+20)/2, texte.width+40, texte.height+20, 10).setDepth(101).setScrollFactor(0);
+        texte.setPosition(x - texte.width/2, y - texte.height/2).setScrollFactor(0);
+        this.time.delayedCall(2000, () => { texte.destroy(); bg.destroy(); this.alerteActive = false; });
     }
 }
