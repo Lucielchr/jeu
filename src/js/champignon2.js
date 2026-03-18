@@ -15,7 +15,6 @@ export class Champignon2 extends Phaser.Scene {
 
     create() {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
-
         this.physics.world.gravity.y = 800;
 
         const map = this.make.tilemap({ key: 'map2' });
@@ -37,6 +36,9 @@ export class Champignon2 extends Phaser.Scene {
         this.player = this.physics.add.sprite(this.spawnPoint.x, this.spawnPoint.y, 'yoshi');
         this.player.setDisplaySize(50, 70).setCollideWorldBounds(true);
         
+        // --- DIRECTION PAR DEFAUT ---
+        this.derniereDirection = 'droite';
+
         // --- BLOCS SOLIDES À DÉTRUIRE ---
         this.blocks = this.physics.add.group();
         for(let i = 0; i < 4; i++) {
@@ -62,26 +64,45 @@ export class Champignon2 extends Phaser.Scene {
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.physics.add.collider(this.fireballs, this.blocks, (ball, block) => { ball.destroy(); block.destroy(); if (this.blocks.countActive() === 0) this.coffre.setVisible(true); });
+        // Collision tirs / blocs
+        this.physics.add.collider(this.fireballs, this.blocks, (ball, block) => { 
+            ball.destroy(); 
+            block.destroy(); 
+            if (this.blocks.countActive() === 0) this.coffre.setVisible(true); 
+        });
+
         this.physics.add.overlap(this.player, this.coffre, () => { if (this.coffre.visible && !this.hasCiseaux) this.ciseaux.setVisible(true); });
         this.physics.add.overlap(this.player, this.ciseaux, () => { if (this.ciseaux.visible) { this.ciseaux.destroy(); this.hasCiseaux = true; this.cameras.main.flash(500, 255, 255, 255); } });
 
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        
-        // Autoriser Yoshi à sortir par le bas pour le respawn
         this.physics.world.setBoundsCollision(true, true, true, false); 
         this.isExiting = false;
     }
 
     update() {
         if (this.isExiting) return;
-        if (this.cursors.left.isDown) { this.player.setVelocityX(-250); this.player.anims.play('anim_tourne_gauche', true); }
-        else if (this.cursors.right.isDown) { this.player.setVelocityX(250); this.player.anims.play('anim_tourne_droite', true); }
-        else { this.player.setVelocityX(0); this.player.anims.play('anim_face'); }
+
+        // --- MOUVEMENTS ET DETECTION DIRECTION ---
+        if (this.cursors.left.isDown) { 
+            this.player.setVelocityX(-250); 
+            this.player.anims.play('anim_tourne_gauche', true);
+            this.derniereDirection = 'gauche'; // Il regarde à gauche
+        } 
+        else if (this.cursors.right.isDown) { 
+            this.player.setVelocityX(250); 
+            this.player.anims.play('anim_tourne_droite', true);
+            this.derniereDirection = 'droite'; // Il regarde à droite
+        } 
+        else { 
+            this.player.setVelocityX(0); 
+            this.player.anims.play('anim_face'); 
+        }
         
         if (this.cursors.up.isDown && this.player.body.blocked.down) this.player.setVelocityY(-550);
+        
+        // Tirer avec A
         if (Phaser.Input.Keyboard.JustDown(this.keyA)) this.lancerFeu();
 
         // Sortie par le tuyau
@@ -92,13 +113,11 @@ export class Champignon2 extends Phaser.Scene {
                     this.cameras.main.fadeOut(1000, 0, 0, 0);
                     this.cameras.main.once('camerafadeoutcomplete', () => { this.scene.start('Champignon1', { questComplete: true }); });
                 } else {
-                    // MESSAGE D'ALERTE CORRIGÉ
                     this.afficherBulleAlerte(this.cameras.main.centerX, 500, "Vous devez d'abord trouver les ciseaux");
                 }
             }
         }
         
-        // Mort si on tombe
         if (this.player.y > this.physics.world.bounds.height + 50) this.resetPlayer();
     }
 
@@ -110,9 +129,14 @@ export class Champignon2 extends Phaser.Scene {
     }
 
     lancerFeu() {
-        let vx = this.player.flipX ? -600 : 600;
-        let ball = this.fireballs.create(this.player.x, this.player.y, 'feu_img').setDisplaySize(30, 30).setVelocityX(vx);
+        // Vitesse basée sur la variable derniereDirection
+        let vx = (this.derniereDirection === 'gauche') ? -600 : 600;
+        
+        let ball = this.fireballs.create(this.player.x, this.player.y, 'feu_img');
+        ball.setDisplaySize(30, 30);
+        ball.setVelocityX(vx);
         ball.body.allowGravity = false;
+        
         this.time.delayedCall(1500, () => { if(ball.active) ball.destroy(); });
     }
 
