@@ -51,7 +51,7 @@ export class Hub extends Phaser.Scene {
        
         
         // --- LE JOUEUR (Il apparait au-dessus du sol mais sous les arbres si tu veux) ---
-        this.player = this.physics.add.sprite(1000, 1500, 'player');
+        this.player = this.physics.add.sprite(800, 1000, 'player');
         // --- ANIMATIONS DU JOUEUR ---
         this.anims.create({
             key: 'down',
