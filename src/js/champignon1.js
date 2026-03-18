@@ -1,4 +1,4 @@
-export  class Champignon1 extends Phaser.Scene {
+export class Champignon1 extends Phaser.Scene {
     constructor() {
         super('Champignon1');
     }
@@ -21,7 +21,6 @@ export  class Champignon1 extends Phaser.Scene {
 
     create() {
         this.cameras.main.fadeIn(1000, 0, 0, 0);
-
         this.physics.world.gravity.y = 800;
 
         if (!this.sound.get('musique_mario')) {
@@ -51,7 +50,6 @@ export  class Champignon1 extends Phaser.Scene {
 
         this.tuyau = this.physics.add.staticImage(1504, 580, 'tuyau').setDepth(5);
 
-        // --- GESTION DYNAMIQUE DU RESPAWN CORRIGÉE ---
         if (this.vientDuTuyau) { 
             this.respawnX = 1504; 
             this.respawnY = 350; 
@@ -80,14 +78,30 @@ export  class Champignon1 extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
+        // --- ICI : LE CODE DU DONJON (ZONE DE FIN) ---
+        // J'ai mis 3500, 450 (fin de map typique), vérifie sur ta map Tiled !
+        this.donjonZone = this.add.zone(3500, 450, 150, 200); 
+        this.physics.add.existing(this.donjonZone, true);
+
+        this.physics.add.overlap(this.player, this.donjonZone, () => {
+            if (this.vientDuTuyau) {
+                this.registry.set('hasCisaille', true); // On active l'accès au niveau 2 dans le Hub
+                this.scene.start('Hub'); // On rentre à la maison
+            } else {
+                this.afficherBulle(this.player.x, this.player.y - 100, "Le donjon est fermé, trouve les ciseaux !");
+            }
+        });
+
+        // Bulles de début
         if (!this.vientDuTuyau) {
             this.afficherBulle(this.cameras.main.centerX, 100, 'Cherche les ciseaux');
         } else {
-            this.afficherBulle(this.cameras.main.centerX, 100, 'Bravo ! Vous avez trouvé les ciseaux');
+            this.afficherBulle(this.cameras.main.centerX, 100, 'Bravo ! Retourne au donjon');
         }
-    }
+    } // FIN DU CREATE
 
     update() {
+        // ... ton code update habituel ...
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-250);
             this.player.anims.play('anim_tourne_gauche', true);
@@ -110,8 +124,6 @@ export  class Champignon1 extends Phaser.Scene {
             if (this.cursors.down.isDown) {
                 if (!this.vientDuTuyau) {
                     this.scene.start('Champignon2');
-                } else {
-                    this.afficherBulle(1504, 450, "Le passage est fermé !");
                 }
             }
         }
