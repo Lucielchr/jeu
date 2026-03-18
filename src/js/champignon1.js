@@ -48,7 +48,9 @@ export class Champignon1 extends Phaser.Scene {
         if (platRouge) platRouge.setCollisionByProperty({ estSolide: true });
         if (platBleu) platBleu.setCollisionByProperty({ estSolide: true });
 
+        // --- OBJETS ---
         this.tuyau = this.physics.add.staticImage(1504, 580, 'tuyau').setDepth(5);
+        this.donjon = this.physics.add.staticImage(3136, 256, 'donjon_img').setDepth(5);
 
         if (this.vientDuTuyau) { 
             this.respawnX = 1504; 
@@ -73,35 +75,33 @@ export class Champignon1 extends Phaser.Scene {
         this.physics.add.collider(this.player, platBleu);
         this.physics.add.collider(this.player, this.tuyau);
 
+        // --- COLLISION DONJON (FIN) ---
+        this.physics.add.collider(this.player, this.donjon, () => {
+            if (this.vientDuTuyau) {
+                this.registry.set('hasCisaille', true);
+                this.afficherBulle(400, 300, "Ciseaux récupérés ! Retour au Hub...");
+                this.time.delayedCall(2000, () => { this.scene.start('Hub'); });
+            } else {
+                this.afficherBulle(400, 300, "Le donjon est fermé, trouve les ciseaux !");
+            }
+        });
+
         this.cursors = this.input.keyboard.createCursorKeys();
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
 
-        // --- ICI : LE CODE DU DONJON (ZONE DE FIN) ---
-        // J'ai mis 3500, 450 (fin de map typique), vérifie sur ta map Tiled !
-        this.donjonZone = this.add.zone(3500, 450, 150, 200); 
-        this.physics.add.existing(this.donjonZone, true);
-
-        this.physics.add.overlap(this.player, this.donjonZone, () => {
-            if (this.vientDuTuyau) {
-                this.registry.set('hasCisaille', true); // On active l'accès au niveau 2 dans le Hub
-                this.scene.start('Hub'); // On rentre à la maison
+        // Message de départ
+        this.time.delayedCall(500, () => {
+            if (!this.vientDuTuyau) {
+                this.afficherBulle(400, 100, 'Cherche les ciseaux !');
             } else {
-                this.afficherBulle(this.player.x, this.player.y - 100, "Le donjon est fermé, trouve les ciseaux !");
+                this.afficherBulle(400, 100, 'Bravo ! Entre dans le donjon');
             }
         });
-
-        // Bulles de début
-        if (!this.vientDuTuyau) {
-            this.afficherBulle(this.cameras.main.centerX, 100, 'Cherche les ciseaux');
-        } else {
-            this.afficherBulle(this.cameras.main.centerX, 100, 'Bravo ! Retourne au donjon');
-        }
-    } // FIN DU CREATE
+    }
 
     update() {
-        // ... ton code update habituel ...
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-250);
             this.player.anims.play('anim_tourne_gauche', true);
@@ -114,8 +114,9 @@ export class Champignon1 extends Phaser.Scene {
         }
         if (this.cursors.up.isDown && this.player.body.blocked.down) this.player.setVelocityY(-600);
 
+        // Mort avec écran rouge
         if (this.player.y > this.physics.world.bounds.height + 50) {
-            this.cameras.main.flash(400, 200, 0, 0); 
+            this.cameras.main.flash(500, 255, 0, 0); // Flash rouge (R=255, G=0, B=0)
             this.player.setPosition(this.respawnX, this.respawnY);
             this.player.setVelocity(0, 0);
         }
@@ -124,17 +125,55 @@ export class Champignon1 extends Phaser.Scene {
             if (this.cursors.down.isDown) {
                 if (!this.vientDuTuyau) {
                     this.scene.start('Champignon2');
+                } else {
+                    this.afficherBulle(400, 300, "Le passage est fermé !");
                 }
             }
         }
     }
 
+    // FONCTION BULLE AMELIOREE
     afficherBulle(x, y, message) {
         if (this.bulleActive) return;
         this.bulleActive = true;
-        let texte = this.add.text(0, 0, message, { fontSize: '22px', fill: '#000000', fontFamily: 'Arial' }).setDepth(102);
-        let bg = this.add.graphics().fillStyle(0xffffff, 1).fillRoundedRect(x - (texte.width+40)/2, y - (texte.height+20)/2, texte.width+40, texte.height+20, 10).setDepth(101).setScrollFactor(0);
-        texte.setPosition(x - texte.width/2, y - texte.height/2).setScrollFactor(0);
-        this.time.delayedCall(3000, () => { texte.destroy(); bg.destroy(); this.bulleActive = false; });
+
+        // Texte
+        let texte = this.add.text(x, y, message, { 
+            fontSize: '22px', 
+            fill: '#000000', 
+            fontFamily: 'Arial',
+            align: 'center'
+        })
+        .setOrigin(0.5)
+        .setDepth(102)
+        .setScrollFactor(0);
+
+        // Fond blanc arrondi
+        let bg = this.add.graphics();
+        bg.fillStyle(0xffffff, 1);
+        bg.fillRoundedRect(
+            x - (texte.width + 40) / 2, 
+            y - (texte.height + 20) / 2, 
+            texte.width + 40, 
+            texte.height + 20, 
+            15
+        );
+        bg.setDepth(101).setScrollFactor(0);
+
+        // Bordure noire fine pour que ça ressorte
+        bg.lineStyle(2, 0x000000, 1);
+        bg.strokeRoundedRect(
+            x - (texte.width + 40) / 2, 
+            y - (texte.height + 20) / 2, 
+            texte.width + 40, 
+            texte.height + 20, 
+            15
+        );
+
+        this.time.delayedCall(3000, () => { 
+            texte.destroy(); 
+            bg.destroy(); 
+            this.bulleActive = false; 
+        });
     }
 }
