@@ -131,8 +131,113 @@ export class Hub extends Phaser.Scene {
         // Optionnel : Empêcher de sortir de la map
         this.player.setCollideWorldBounds(true);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+
+        // --- 1. DÉFINITION DE LA TOUCHE D'ACTION ---
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+
+        // --- NOUVEAU : INITIALISATION DE LA CISAILLE ---
+        if (this.registry.get('hasCisaille') === undefined) {
+            this.registry.set('hasCisaille', false);
+        }
+
+        // --- 2. CRÉATION DES ZONES DES PORTES ---
+        // Remplace les chiffres (x, y, largeur, hauteur) par tes vraies coordonnées
+        this.porte1 = this.add.zone(1504, 1312, 160, 160); 
+        this.porte2 = this.add.zone(1408, 192, 64, 128);
+        this.porte3 = this.add.zone(64, 0, 64, 400);
+
+        // On active la physique sur les zones
+        this.physics.add.existing(this.porte1, true);
+        this.physics.add.existing(this.porte2, true);
+        this.physics.add.existing(this.porte3, true);
+
+        // On crée un petit texte d'aide (fixé à l'écran)
+        this.texteAide = this.add.text(400, 550, "Appuie sur E pour entrer", { 
+            fontSize: '20px', 
+            fill: '#ffffff',
+            backgroundColor: '#000000' 
+        }).setOrigin(0.5).setScrollFactor(0);
+        this.texteAide.setVisible(false); // Caché par défaut
+
+        // --- LOGIQUE DU DRAGON ET DE L'ÉPÉE ---
+
+        // 1. On prépare les variables dans le registre global
+        if (this.registry.get('hasEpee') === undefined) {
+            this.registry.set('hasEpee', false);
+        }
+        if (this.registry.get('dragonVivant') === undefined) {
+            this.registry.set('dragonVivant', true);
+        }
+
+        // 2. On crée le dragon avec l'image 'img6' (ton fichier pisilohe10.png)
+        // Je le place à (128, 128) pour qu'il soit visible devant ta porte 3 (64, 0)
+        this.dragon = this.physics.add.staticSprite(64,128 , 'img6');
+
+        // 3. On ajoute une collision : le joueur ne peut pas passer à travers lui
+        this.physics.add.collider(this.player, this.dragon);
+
+        // 4. Si le joueur a déjà tué le dragon lors d'une visite précédente, on le fait disparaître
+        if (this.registry.get('dragonVivant') === false) {
+            this.dragon.destroy();
+        }
     }
     update() {
+        // 1. On cache le texte par défaut
+        this.texteAide.setVisible(false);
+
+        // --- VÉRIFICATION PORTE 1 ---
+        if (this.physics.overlap(this.player, this.porte1)) {
+            this.texteAide.setText("Appuie sur E pour entrer au Niveau 1"); // On force le texte ici
+            this.texteAide.setVisible(true);
+            if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                this.scene.start('Niveau1');
+            }
+        }
+
+        // --- VÉRIFICATION PORTE 2 (AVEC CONDITION CISAILLE) ---
+        else if (this.physics.overlap(this.player, this.porte2)) { // Utilise "else if" pour plus de clarté
+            const possedeCisaille = this.registry.get('hasCisaille');
+
+            if (possedeCisaille) {
+                this.texteAide.setText("Appuie sur E pour entrer au Niveau 2");
+                this.texteAide.setVisible(true);
+                if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                    this.scene.start('Niveau2');
+                }
+            } else {
+                this.texteAide.setText("OULALA IL Y A TROP DE BROUSSAILLES, il faudrait une cisaille !");
+                this.texteAide.setVisible(true);
+            }
+        }    
+
+        // --- VÉRIFICATION PORTE 3 (DRAGON + NIVEAU 3) ---
+        if (this.physics.overlap(this.player, this.porte3)) {
+            const dragonVivant = this.registry.get('dragonVivant');
+            const possedeEpee = this.registry.get('hasEpee');
+
+            if (dragonVivant) {
+                // Le dragon est là
+                if (possedeEpee) {
+                    this.texteAide.setText("Appuie sur F pour terrasser le dragon avec l'épée !");
+                    this.texteAide.setVisible(true);
+                    if (Phaser.Input.Keyboard.JustDown(this.keyF)) {
+                        this.registry.set('dragonVivant', false); // On enregistre sa mort
+                        this.dragon.destroy(); // Il disparaît de l'écran
+                        console.log("Dragon vaincu !");
+                    }
+                } else {
+                    this.texteAide.setText("Ce dragon refuse de te laisser passer sans un combat... Il te faut une épée !");
+                    this.texteAide.setVisible(true);
+                }
+            } else {
+                // Le dragon est mort, la porte est accessible
+                this.texteAide.setText("Le passage est libre ! Appuie sur E pour entrer au Niveau 3");
+                this.texteAide.setVisible(true);
+                if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                    this.scene.start('Niveau3');
+                }
+            }
+        }
     this.player.setVelocity(0);
     const speed = 160;
 
