@@ -11,7 +11,7 @@ export class Champignon1 extends Phaser.Scene {
         this.load.spritesheet('yoshi', 'src/asset/yoshi.png', { frameWidth: 248, frameHeight: 385 });
         this.load.image('tuyau', 'src/asset/tuyaux.png');
         this.load.tilemapTiledJSON('map1', 'src/asset/map_lucie.tmj');
-        this.load.image('tuiles_img', 'src/asset/plat.png');
+        this.load.image('tuiles_img', 'src/asset/plat .png');
         this.load.image('fond_champignon', 'src/asset/champignon du fond .png');
         this.load.image('mimi_img', 'src/asset/mimi.png');
         this.load.image('ciel_img', 'src/asset/fond_lulu.png');
@@ -29,7 +29,7 @@ export class Champignon1 extends Phaser.Scene {
         }
 
         const map = this.make.tilemap({ key: 'map1' });
-        const tsPlat = map.addTilesetImage('plat', 'tuiles_img');
+        const tsPlat = map.addTilesetImage('plat ', 'tuiles_img');
         const tsFond = map.addTilesetImage('champignon du fond ', 'fond_champignon');
         const tsMimi = map.addTilesetImage('mimi', 'mimi_img');
         const tsLulu = map.addTilesetImage('fond_lulu', 'ciel_img');
