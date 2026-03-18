@@ -27,7 +27,7 @@ export class Hub extends Phaser.Scene {
 
         // --- LA MAGIE : On récupère les noms internes du JSON automatiquement ---
         const nomsTilesetsDansJson = map.tilesets.map(t => t.name);
-        
+
         // On associe chaque nom trouvé dans Tiled à une de tes 7 images
         const t1 = map.addTilesetImage('4', 'img1');
         const t2 = map.addTilesetImage('Assets_source', 'img2');
@@ -39,17 +39,17 @@ export class Hub extends Phaser.Scene {
 
         const tousLesTilesets = [t1, t2, t3, t4, t5, t6, t7];
 
-      // --- AFFICHAGE DES CALQUES (L'ordre est crucial : le premier est au fond) ---
+        // --- AFFICHAGE DES CALQUES (L'ordre est crucial : le premier est au fond) ---
         // On crée les calques un par un. Si un nom est faux, Phaser le dira.
         const murInvisible = map.createLayer('mur invisible', tousLesTilesets, 0, 0);
         const herbe = map.createLayer('herbe', tousLesTilesets, 0, 0);
         const detail = map.createLayer('detail', tousLesTilesets, 0, 0);
         const arbre = map.createLayer('arbre', tousLesTilesets, 0, 0);
         const detail2 = map.createLayer('detail2', tousLesTilesets, 0, 0);
-        
 
-       
-        
+
+
+
         // --- LE JOUEUR (Il apparait au-dessus du sol mais sous les arbres si tu veux) ---
         this.player = this.physics.add.sprite(800, 1000, 'player');
         // --- ANIMATIONS DU JOUEUR ---
@@ -83,11 +83,11 @@ export class Hub extends Phaser.Scene {
 
         // Animation quand on ne bouge pas (on garde la frame face caméra)
         this.anims.create({
-            key: 'idle',
+            key: 'Idle1',
             frames: [{ key: 'player', frame: 1 }],
             frameRate: 10
         });
-        
+
         // 1. On définit les limites du MONDE PHYSIQUE (pour que le perso ne soit pas bloqué à 800px)
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
 
@@ -99,7 +99,7 @@ export class Hub extends Phaser.Scene {
 
 
         const maison = map.createLayer('maison', tousLesTilesets, 0, -128);
-        
+
 
         // --- COLLISIONS ---
         // On active la collision pour les tuiles qui ont la propriété "estSolide" dans Tiled
@@ -127,7 +127,7 @@ export class Hub extends Phaser.Scene {
         // Caméra
         this.cameras.main.startFollow(this.player);
         this.cursors = this.input.keyboard.createCursorKeys();
-        
+
         // Optionnel : Empêcher de sortir de la map
         this.player.setCollideWorldBounds(true);
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -142,7 +142,7 @@ export class Hub extends Phaser.Scene {
 
         // --- 2. CRÉATION DES ZONES DES PORTES ---
         // Remplace les chiffres (x, y, largeur, hauteur) par tes vraies coordonnées
-        this.porte1 = this.add.zone(1504, 1312, 160, 160); 
+        this.porte1 = this.add.zone(1504, 1312, 160, 160);
         this.porte2 = this.add.zone(1408, 192, 64, 128);
         this.porte3 = this.add.zone(64, 0, 64, 400);
 
@@ -152,10 +152,10 @@ export class Hub extends Phaser.Scene {
         this.physics.add.existing(this.porte3, true);
 
         // On crée un petit texte d'aide (fixé à l'écran)
-        this.texteAide = this.add.text(400, 550, "Appuie sur E pour entrer", { 
-            fontSize: '20px', 
+        this.texteAide = this.add.text(400, 550, "Appuie sur E pour entrer", {
+            fontSize: '20px',
             fill: '#ffffff',
-            backgroundColor: '#000000' 
+            backgroundColor: '#000000'
         }).setOrigin(0.5).setScrollFactor(0);
         this.texteAide.setVisible(false); // Caché par défaut
 
@@ -171,7 +171,7 @@ export class Hub extends Phaser.Scene {
 
         // 2. On crée le dragon avec l'image 'img6' (ton fichier pisilohe10.png)
         // Je le place à (128, 128) pour qu'il soit visible devant ta porte 3 (64, 0)
-        this.dragon = this.physics.add.staticSprite(64,128 , 'img6');
+        this.dragon = this.physics.add.staticSprite(64, 128, 'img6');
 
         // 3. On ajoute une collision : le joueur ne peut pas passer à travers lui
         this.physics.add.collider(this.player, this.dragon);
@@ -208,7 +208,7 @@ export class Hub extends Phaser.Scene {
                 this.texteAide.setText("OULALA IL Y A TROP DE BROUSSAILLES, il faudrait une cisaille !");
                 this.texteAide.setVisible(true);
             }
-        }    
+        }
 
         // --- VÉRIFICATION PORTE 3 (DRAGON + NIVEAU 3) ---
         if (this.physics.overlap(this.player, this.porte3)) {
@@ -234,43 +234,45 @@ export class Hub extends Phaser.Scene {
                 this.texteAide.setText("Le passage est libre ! Appuie sur E pour entrer au Niveau 3");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                    this.scene.start('demon');
+
+                    this.scene.start('Demon');
+
                 }
             }
         }
-    this.player.setVelocity(0);
-    const speed = 160;
+        this.player.setVelocity(0);
+        const speed = 160;
 
-    // Déplacements et Animations horizontales
-    if (this.cursors.left.isDown) {
-        this.player.setVelocityX(-speed);
-        this.player.anims.play('left', true);
-    } else if (this.cursors.right.isDown) {
-        this.player.setVelocityX(speed);
-        this.player.anims.play('right', true);
-    }
-
-    // Déplacements et Animations verticales
-    if (this.cursors.up.isDown) {
-        this.player.setVelocityY(-speed);
-        if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
-            this.player.anims.play('up', true);
+        // Déplacements et Animations horizontales
+        if (this.cursors.left.isDown) {
+            this.player.setVelocityX(-speed);
+            this.player.anims.play('left', true);
+        } else if (this.cursors.right.isDown) {
+            this.player.setVelocityX(speed);
+            this.player.anims.play('right', true);
         }
-    } else if (this.cursors.down.isDown) {
-        this.player.setVelocityY(speed);
-        if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
-            this.player.anims.play('down', true);
+
+        // Déplacements et Animations verticales
+        if (this.cursors.up.isDown) {
+            this.player.setVelocityY(-speed);
+            if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
+                this.player.anims.play('up', true);
+            }
+        } else if (this.cursors.down.isDown) {
+            this.player.setVelocityY(speed);
+            if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
+                this.player.anims.play('down', true);
+            }
+        }
+
+        // Si on ne bouge pas du tout
+        if (this.player.body.velocity.x === 0 && this.player.body.velocity.y === 0) {
+            this.player.anims.play('idle');
+        }
+
+        // Normalisation pour éviter d'aller trop vite en diagonale
+        if (this.player.body.velocity.x !== 0 || this.player.body.velocity.y !== 0) {
+            this.player.body.velocity.normalize().scale(speed);
         }
     }
-
-    // Si on ne bouge pas du tout
-    if (this.player.body.velocity.x === 0 && this.player.body.velocity.y === 0) {
-        this.player.anims.play('idle');
-    }
-
-    // Normalisation pour éviter d'aller trop vite en diagonale
-    if (this.player.body.velocity.x !== 0 || this.player.body.velocity.y !== 0) {
-        this.player.body.velocity.normalize().scale(speed);
-    }
-}
 }
