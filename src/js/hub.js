@@ -190,7 +190,7 @@ export class Hub extends Phaser.Scene {
             this.texteAide.setText("Appuie sur E pour entrer au Niveau 1"); // On force le texte ici
             this.texteAide.setVisible(true);
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                this.scene.start('champignon1');
+                this.scene.start('Champignon1');
             }
         }
 
@@ -202,7 +202,7 @@ export class Hub extends Phaser.Scene {
                 this.texteAide.setText("Appuie sur E pour entrer au Niveau 2");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-                    this.scene.start('jungle');
+                    this.scene.start('Jungle');
                 }
             } else {
                 this.texteAide.setText("OULALA IL Y A TROP DE BROUSSAILLES, il faudrait une cisaille !");
