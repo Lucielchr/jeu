@@ -113,7 +113,7 @@ export class Champignon2 extends Phaser.Scene {
                     this.cameras.main.fadeOut(1000, 0, 0, 0);
                     this.cameras.main.once('camerafadeoutcomplete', () => { this.scene.start('Champignon1', { questComplete: true }); });
                 } else {
-                    this.afficherBulleAlerte(this.cameras.main.centerX, 500, "Vous devez d'abord trouver les ciseaux");
+                    this.afficherBulleAlerte(this.cameras.main.centerX, 500, "Vous devez d'abord trouver la cisaille !");
                 }
             }
         }

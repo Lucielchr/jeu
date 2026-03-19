@@ -79,10 +79,10 @@ export class Champignon1 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.donjon, () => {
             if (this.vientDuTuyau) {
                 this.registry.set('hasCisaille', true);
-                this.afficherBulle(400, 300, "Ciseaux récupérés ! Retour au Hub...");
+                this.afficherBulle(400, 300, "Cisaille récupérés ! Retour au Hub...");
                 this.time.delayedCall(2000, () => { this.scene.start('Hub'); });
             } else {
-                this.afficherBulle(400, 300, "Le donjon est fermé, trouve les ciseaux !");
+                this.afficherBulle(400, 300, "Le donjon est fermé, trouve la cisaille !");
             }
         });
 
@@ -94,7 +94,7 @@ export class Champignon1 extends Phaser.Scene {
         // Message de départ
         this.time.delayedCall(500, () => {
             if (!this.vientDuTuyau) {
-                this.afficherBulle(400, 100, 'Cherche les ciseaux !');
+                this.afficherBulle(400, 100, 'Cherche la cisaille !');
             } else {
                 this.afficherBulle(400, 100, 'Bravo ! Entre dans le donjon');
             }
