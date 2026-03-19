@@ -8,7 +8,10 @@ export class Champignon1 extends Phaser.Scene {
     }
 
     preload() {
-        this.load.spritesheet('yoshi', 'src/asset/yoshi.png', { frameWidth: 248, frameHeight: 385 });
+        this.load.spritesheet('yoshi', 'src/asset/yoshi.png', {
+            frameWidth: 248,
+            frameHeight: 385
+        });
         this.load.image('tuyau', 'src/asset/tuyaux.png');
         this.load.tilemapTiledJSON('map1', 'src/asset/map_lucie.tmj');
         this.load.image('tuiles_img', 'src/asset/plat .png');
@@ -24,11 +27,16 @@ export class Champignon1 extends Phaser.Scene {
         this.physics.world.gravity.y = 800;
 
         if (!this.sound.get('musique_mario')) {
-            this.bgMusic = this.sound.add('musique_mario', { volume: 0.3, loop: true });
+            this.bgMusic = this.sound.add('musique_mario', {
+                volume: 0.3,
+                loop: true
+            });
             this.bgMusic.play();
         }
 
-        const map = this.make.tilemap({ key: 'map1' });
+        const map = this.make.tilemap({
+            key: 'map1'
+        });
         const tsPlat = map.addTilesetImage('plat ', 'tuiles_img');
         const tsFond = map.addTilesetImage('champignon du fond ', 'fond_champignon');
         const tsMimi = map.addTilesetImage('mimi', 'mimi_img');
@@ -39,9 +47,11 @@ export class Champignon1 extends Phaser.Scene {
         map.createLayer('background1', allTilesets, 0, 0);
         map.createLayer('background2', allTilesets, 0, 0);
         map.createLayer('background4', allTilesets, 0, 0);
+
         const platRose = map.createLayer('champignon_rose', allTilesets, 0, 0);
         const platRouge = map.createLayer('champignon_rouge', allTilesets, 0, 0);
         const platBleu = map.createLayer('champignon_bleu', allTilesets, 0, 0);
+
         map.createLayer('détails', allTilesets, 0, 0);
 
         if (platRose) platRose.setCollisionByProperty({ estSolide: true });
@@ -52,9 +62,9 @@ export class Champignon1 extends Phaser.Scene {
         this.tuyau = this.physics.add.staticImage(1504, 580, 'tuyau').setDepth(5);
         this.donjon = this.physics.add.staticImage(3136, 256, 'donjon_img').setDepth(5);
 
-        if (this.vientDuTuyau) { 
-            this.respawnX = 1504; 
-            this.respawnY = 350; 
+        if (this.vientDuTuyau) {
+            this.respawnX = 1504;
+            this.respawnY = 350;
         } else {
             this.respawnX = 50;
             this.respawnY = 50;
@@ -65,13 +75,31 @@ export class Champignon1 extends Phaser.Scene {
         this.physics.world.setBoundsCollision(true, true, true, false);
 
         if (!this.anims.exists('anim_tourne_gauche')) {
-            this.anims.create({ key: 'anim_tourne_gauche', frames: this.anims.generateFrameNumbers('yoshi', { start: 6, end: 9 }), frameRate: 10, repeat: -1 });
-            this.anims.create({ key: 'anim_face', frames: [ { key: 'yoshi', frame: 4 } ], frameRate: 20 });
-            this.anims.create({ key: 'anim_tourne_droite', frames: this.anims.generateFrameNumbers('yoshi', { start: 0, end: 3 }), frameRate: 10, repeat: -1 });
+            this.anims.create({
+                key: 'anim_tourne_gauche',
+                frames: this.anims.generateFrameNumbers('yoshi', { start: 6, end: 9 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'anim_face',
+                frames: [{ key: 'yoshi', frame: 4 }],
+                frameRate: 20
+            });
+            this.anims.create({
+                key: 'anim_tourne_droite',
+                frames: this.anims.generateFrameNumbers('yoshi', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
         }
 
-        this.physics.add.collider(this.player, platRose, () => { if (this.player.body.blocked.down) this.player.setVelocityY(-400); });
-        this.physics.add.collider(this.player, platRouge, () => { if (this.player.body.blocked.down) this.player.setVelocityY(-650); });
+        this.physics.add.collider(this.player, platRose, () => {
+            if (this.player.body.blocked.down) this.player.setVelocityY(-400);
+        });
+        this.physics.add.collider(this.player, platRouge, () => {
+            if (this.player.body.blocked.down) this.player.setVelocityY(-650);
+        });
         this.physics.add.collider(this.player, platBleu);
         this.physics.add.collider(this.player, this.tuyau);
 
@@ -81,7 +109,9 @@ export class Champignon1 extends Phaser.Scene {
                 this.registry.set('hasCisaille', true);
                 this.afficherBulle(400, 300, "Cisaille récupérée ! Retour au Hub...");
                 if (this.bgMusic) this.bgMusic.stop();
-                this.time.delayedCall(2000, () => { this.scene.start('Hub'); });
+                this.time.delayedCall(2000, () => {
+                    this.scene.start('Hub');
+                });
             } else {
                 this.afficherBulle(400, 300, "Le donjon est fermé, trouve la cisaille !");
             }
@@ -113,11 +143,14 @@ export class Champignon1 extends Phaser.Scene {
             this.player.setVelocityX(0);
             this.player.anims.play('anim_face');
         }
-        if (this.cursors.up.isDown && this.player.body.blocked.down) this.player.setVelocityY(-600);
+
+        if (this.cursors.up.isDown && this.player.body.blocked.down) {
+            this.player.setVelocityY(-600);
+        }
 
         // Mort avec écran rouge
         if (this.player.y > this.physics.world.bounds.height + 50) {
-            this.cameras.main.flash(500, 255, 0, 0); // Flash rouge (R=255, G=0, B=0)
+            this.cameras.main.flash(500, 255, 0, 0);
             this.player.setPosition(this.respawnX, this.respawnY);
             this.player.setVelocity(0, 0);
         }
@@ -139,42 +172,42 @@ export class Champignon1 extends Phaser.Scene {
         this.bulleActive = true;
 
         // Texte
-        let texte = this.add.text(x, y, message, { 
-            fontSize: '22px', 
-            fill: '#000000', 
+        let texte = this.add.text(x, y, message, {
+            fontSize: '22px',
+            fill: '#000000',
             fontFamily: 'Arial',
             align: 'center'
         })
-        .setOrigin(0.5)
-        .setDepth(102)
-        .setScrollFactor(0);
+            .setOrigin(0.5)
+            .setDepth(102)
+            .setScrollFactor(0);
 
         // Fond blanc arrondi
         let bg = this.add.graphics();
         bg.fillStyle(0xffffff, 1);
         bg.fillRoundedRect(
-            x - (texte.width + 40) / 2, 
-            y - (texte.height + 20) / 2, 
-            texte.width + 40, 
-            texte.height + 20, 
+            x - (texte.width + 40) / 2,
+            y - (texte.height + 20) / 2,
+            texte.width + 40,
+            texte.height + 20,
             15
         );
         bg.setDepth(101).setScrollFactor(0);
 
-        // Bordure noire fine pour que ça ressorte
+        // Bordure noire fine
         bg.lineStyle(2, 0x000000, 1);
         bg.strokeRoundedRect(
-            x - (texte.width + 40) / 2, 
-            y - (texte.height + 20) / 2, 
-            texte.width + 40, 
-            texte.height + 20, 
+            x - (texte.width + 40) / 2,
+            y - (texte.height + 20) / 2,
+            texte.width + 40,
+            texte.height + 20,
             15
         );
 
-        this.time.delayedCall(3000, () => { 
-            texte.destroy(); 
-            bg.destroy(); 
-            this.bulleActive = false; 
+        this.time.delayedCall(3000, () => {
+            texte.destroy();
+            bg.destroy();
+            this.bulleActive = false;
         });
     }
 }
