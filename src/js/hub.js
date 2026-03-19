@@ -15,6 +15,12 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         this.load.image('img5', 'src/asset/pine-none06.png');
         this.load.image('img6', 'src/asset/pisilohe10.png');
         this.load.image('img7', 'src/asset/terrain.png');
+        this.load.image('img8', 'src/asset/bull.png');
+        this.load.image('img9', 'src/asset/cherry_blossom_trees.png');
+        this.load.image('img10', 'src/asset/crops.png');
+        this.load.image('img11', 'src/asset/lpc-well.png');
+        this.load.image('img12', 'src/asset/rocks.png');
+        this.load.image('img13', 'src/asset/old man reel in action Sheet.png');
 
         // 3. Le personnage
         // Charge la planche de sprites du joueur en découpant des cadres de 32x32 pixels
@@ -43,9 +49,16 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         const t5 = map.addTilesetImage('pine-none06', 'img5');
         const t6 = map.addTilesetImage('pisilohe10', 'img6');
         const t7 = map.addTilesetImage('terrain', 'img7');
+        const t8 = map.addTilesetImage('bull', 'img8');
+        const t9 = map.addTilesetImage('cherry_blossom_trees', 'img9');
+        const t10 = map.addTilesetImage('crops', 'img10');
+        const t11 = map.addTilesetImage('lpc-well', 'img11');
+        const t12 = map.addTilesetImage('rocks', 'img12');
+        const t13 = map.addTilesetImage('old man reel in action Sheet', 'img13');
+
 
         // Regroupe tous les tilesets dans un tableau pour les appliquer aux calques
-        const tousLesTilesets = [t1, t2, t3, t4, t5, t6, t7];
+        const tousLesTilesets = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13];
 
         // --- AFFICHAGE DES CALQUES ---
         const murInvisible = map.createLayer('mur invisible', tousLesTilesets, 0, 0);
