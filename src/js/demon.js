@@ -182,7 +182,7 @@ export class Demon extends Phaser.Scene {
             .setDepth(1000);
 
         // Texte principal
-        this.add.text(centerX, centerY - 70, "Merci d'avoir joué à notre jeu !", {
+        this.add.text(centerX, centerY - 70, "Merci de m'avoir retrouvé WAOUF !", {
             font: "42px Arial",
             fill: "#ffffff",
             align: "center"
