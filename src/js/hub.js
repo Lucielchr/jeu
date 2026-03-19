@@ -38,53 +38,41 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         const tousLesTilesets = [t1, t2, t3, t4, t5, t6, t7];
 
         // --- AFFICHAGE DES CALQUES ---
-        // Crée les couches de décors dans l'ordre (le premier est en dessous, le dernier au-dessus) avec initialiastions de leurs coordonnées
         const murInvisible = map.createLayer('mur invisible', tousLesTilesets, 0, 0);
         const herbe = map.createLayer('herbe', tousLesTilesets, 0, 0);
         const detail = map.createLayer('detail', tousLesTilesets, 0, 0);
         const arbre = map.createLayer('arbre', tousLesTilesets, 0, 0);
         const detail2 = map.createLayer('detail2', tousLesTilesets, 0, 0);
-        // Crée le calque "maison" avec un décalage vertical de -128 pixels 
         const maison = map.createLayer('maison', tousLesTilesets, 0, -128);
 
         // --- LE JOUEUR ---
-        // Crée le sprite du joueur aux coordonnées (800, 1000) avec la physique activée
         this.player = this.physics.add.sprite(800, 1000, 'player');
 
         // --- ANIMATIONS DU JOUEUR ---
-        // Animation pour marcher vers le bas (frames 0 à 2)
         this.anims.create({
             key: 'down',
             frames: this.anims.generateFrameNumbers('player', { start: 0, end: 2 }),
             frameRate: 10,
-            repeat: -1 // -1 signifie que l'animation boucle à l'infini
+            repeat: -1 
         });
-
-        // Animation pour marcher vers la gauche (frames 3 à 5)
         this.anims.create({
             key: 'left',
             frames: this.anims.generateFrameNumbers('player', { start: 3, end: 5 }),
             frameRate: 10,
             repeat: -1
         });
-
-        // Animation pour marcher vers la droite (frames 6 à 8)
         this.anims.create({
             key: 'right',
             frames: this.anims.generateFrameNumbers('player', { start: 6, end: 8 }),
             frameRate: 10,
             repeat: -1
         });
-
-        // Animation pour marcher vers le haut (frames 9 à 11)
         this.anims.create({
             key: 'up',
             frames: this.anims.generateFrameNumbers('player', { start: 9, end: 11 }),
             frameRate: 10,
             repeat: -1
         });
-
-        // Animation d'immobilité (utilise une seule frame fixe)
         this.anims.create({
             key: 'Idle1',
             frames: [{ key: 'player', frame: 1 }],
@@ -92,26 +80,22 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         });
 
         // Limites du monde et caméra
-        // Empêche la physique et la caméra de sortir de la taille de la carte
-        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels); // définit ou commence et termine le monde pysique avec calcul intégré
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels); 
         this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.player.setCollideWorldBounds(true); // Empêche le joueur de sortir des bords de l'écran
-
-        
+        this.player.setCollideWorldBounds(true); 
 
         // --- COLLISIONS ---
-        // Vérifie si le calque existe, active les collisions selon la propriété 'estSolide' définie dans Tiled
         if (arbre) {
             arbre.setCollisionByProperty({ estSolide: true });
-            this.physics.add.collider(this.player, arbre); // Bloque le joueur contre ce calque
+            this.physics.add.collider(this.player, arbre);
         }
         if (murInvisible) {
             murInvisible.setCollisionByProperty({ estSolide: true });
             this.physics.add.collider(this.player, murInvisible);
         }
-        if (detail) { // Vérifie que le calque "detail" existe avant d'appliquer les collisions (évite les erreurs si le calque a été mal nommé ou supprimé dans Tiled)
+        if (detail) {
             detail.setCollisionByProperty({ estSolide: true });
-            this.physics.add.collider(this.player, detail); // Bloque le joueur contre les éléments de ce calque qui ont la propriété "estSolide" définie à true dans Tiled
+            this.physics.add.collider(this.player, detail);
         }
         if (detail2) {
             detail2.setCollisionByProperty({ estSolide: true });
@@ -123,33 +107,35 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         }
 
         // Caméra suit le joueur
-        this.cameras.main.startFollow(this.player); // La caméra se centre sur le joueur
-        this.cursors = this.input.keyboard.createCursorKeys(); // créer les touches les plus utilisées pour les déplacements (flèches directionnelles, espace et shift) pour ne pas créer les touches une par une
+        this.cameras.main.startFollow(this.player); 
+        this.cursors = this.input.keyboard.createCursorKeys(); 
 
         // --- DÉFINITION DES TOUCHES ---
-        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E); // Touche E pour interagir
-        this.keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F); // Touche F pour attaquer
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E); 
+        this.keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F); 
 
         // --- INITIALISATION REGISTRE ---
-        // Le registre permet de garder des variables en mémoire même en changeant de scène
-        if (this.registry.get('hasCisaille') === undefined) { // Sans ce if, à chaque fois que tu reviendrais dans le Hub, le code remettrait la valeur à false, et tu perdrais ta cisaille 
-            this.registry.set('hasCisaille', false); // Etat par défaut : pas de cisaille
+        if (this.registry.get('hasCisaille') === undefined) { 
+            this.registry.set('hasCisaille', false); 
         }
         if (this.registry.get('hasEpee') === undefined) {
-            this.registry.set('hasEpee', false); // Etat par défaut : pas d'épée
+            this.registry.set('hasEpee', false); 
         }
         if (this.registry.get('dragonVivant') === undefined) {
-            this.registry.set('dragonVivant', true); // Etat par défaut : le dragon est là
+            this.registry.set('dragonVivant', true); 
+        }
+
+        // --- NOUVEAU : On vérifie si l'intro a déjà été vue ---
+        if (this.registry.get('dejaVuIntro') === undefined) {
+            this.registry.set('dejaVuIntro', false);
         }
 
         // --- CRÉATION DES ZONES DES PORTES ---
-        // Crée des rectangles invisibles pour détecter si le joueur est devant une porte/un événement
         this.porte1 = this.add.zone(1504, 1312, 160, 160);
         this.porte2 = this.add.zone(1408, 192, 64, 128);
         this.porte3 = this.add.zone(64, 128, 120, 120);
 
-        // Active la physique sur ces zones invisibles
-        this.physics.add.existing(this.porte1, true);// pour savoir quand le joueur touche la zone de la porte 1, true signifie que ces zones sont statiques (elles ne bougent pas, ne peuvent pas tomber)
+        this.physics.add.existing(this.porte1, true);
         this.physics.add.existing(this.porte2, true);
         this.physics.add.existing(this.porte3, true);
 
@@ -158,36 +144,42 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
             fontSize: '20px',
             fill: '#ffffff',
             backgroundColor: '#000000'
-        }).setOrigin(0.5).setScrollFactor(0); // setOrigin(0.5) centre le texte, setScrollFactor(0) fixe le texte sur l'écran (il ne bouge pas avec la map)
-        this.texteAide.setVisible(false); // Caché au départ
+        }).setOrigin(0.5).setScrollFactor(0); 
+        this.texteAide.setVisible(false); 
 
         // --- LE DRAGON ---
-        this.dragon = this.physics.add.staticSprite(64, 128, 'img6'); // Crée le dragon
-        this.physics.add.collider(this.player, this.dragon); // Le dragon bloque le passage physiquement
+        this.dragon = this.physics.add.staticSprite(64, 128, 'img6'); 
+        this.physics.add.collider(this.player, this.dragon); 
 
-        // Si le dragon a déjà été tué (vérifié dans le registre), on le retire immédiatement
         if (this.registry.get('dragonVivant') === false) {
             this.dragon.destroy();
+        }
+
+        // --- AJOUT : BULLE D'INTRODUCTION (UNE SEULE FOIS) ---
+        if (this.registry.get('dejaVuIntro') === false) {
+            this.time.delayedCall(500, () => {
+                this.afficherBulleIntroduction("Ohh noonnn!! mon chien a disparu, je pense que c'est le démon!");
+                // On marque l'intro comme "vue" pour que ça ne revienne plus
+                this.registry.set('dejaVuIntro', true);
+            });
         }
     }
 
     update() {
-        // 1. On cache le texte par défaut à chaque frame (il sera réaffiché si on est sur une zone)
         this.texteAide.setVisible(false);
 
         // --- VÉRIFICATION PORTE 1 ---
-        // Si le joueur touche la zone de la porte 1
         if (this.physics.overlap(this.player, this.porte1)) {
             this.texteAide.setText("Appuie sur E pour entrer au Niveau 1");
             this.texteAide.setVisible(true);
-            if (Phaser.Input.Keyboard.JustDown(this.keyE)) { // Si E est pressé une seule fois
-                this.scene.start('Champignon1'); // Change de scène vers le niveau 1
+            if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                this.scene.start('Champignon1'); 
             }
         }
 
         // --- VÉRIFICATION PORTE 2 ---
         else if (this.physics.overlap(this.player, this.porte2)) {
-            const possedeCisaille = this.registry.get('hasCisaille'); // Vérifie l'inventaire
+            const possedeCisaille = this.registry.get('hasCisaille'); 
             if (possedeCisaille) {
                 this.texteAide.setText("Appuie sur E pour entrer au Niveau 2");
                 this.texteAide.setVisible(true);
@@ -195,7 +187,6 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
                     this.scene.start('Jungle');
                 }
             } else {
-                // Message si l'objet requis est manquant
                 this.texteAide.setText("OULALA IL Y A TROP DE BROUSSAILLES, il faudrait une cisaille !");
                 this.texteAide.setVisible(true);
             }
@@ -210,17 +201,15 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
                 if (possedeEpee) {
                     this.texteAide.setText("Appuie sur F pour terrasser le dragon avec l'épée !");
                     this.texteAide.setVisible(true);
-                    if (Phaser.Input.Keyboard.JustDown(this.keyF)) { // Combat
-                        this.registry.set('dragonVivant', false); // Enregistre la mort du dragon
-                        this.dragon.destroy(); // Supprime visuellement le dragon
-                        console.log("Dragon vaincu !");
+                    if (Phaser.Input.Keyboard.JustDown(this.keyF)) { 
+                        this.registry.set('dragonVivant', false); 
+                        this.dragon.destroy(); 
                     }
                 } else {
                     this.texteAide.setText("OHHHH un dragon, il me faut une épée pour le combattre !");
                     this.texteAide.setVisible(true);
                 }
             } else {
-                // Si le dragon est mort, la zone devient une porte vers le Niveau 3
                 this.texteAide.setText("Le passage est libre ! Appuie sur E pour entrer au Niveau 3");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
@@ -230,10 +219,9 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         }
 
         // Mouvements du joueur
-        this.player.setVelocity(0); // On stoppe le mouvement par défaut
+        this.player.setVelocity(0); 
         const speed = 160;
 
-        // Gestion de la marche gauche/droite
         if (this.cursors.left.isDown) {
             this.player.setVelocityX(-speed);
             this.player.anims.play('left', true);
@@ -242,11 +230,9 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
             this.player.anims.play('right', true);
         }
 
-        // Gestion de la marche haut/bas
         if (this.cursors.up.isDown) {
             this.player.setVelocityY(-speed);
-            // Si on ne va pas déjà à gauche ou à droite, on joue l'anim de haut
-            if (!this.cursors.left.isDown && !this.cursors.right.isDown) { // indispensable pour éviter un bug avec le personnage qui clignoterrait entre les anim de haut et de côté quand on appuyait sur haut+gauche ou haut+droite 
+            if (!this.cursors.left.isDown && !this.cursors.right.isDown) { 
                 this.player.anims.play('up', true);
             }
         } else if (this.cursors.down.isDown) {
@@ -256,14 +242,50 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
             }
         }
 
-        // Si le joueur ne bouge plus du tout, on joue l'animation Idle
         if (this.player.body.velocity.x === 0 && this.player.body.velocity.y === 0) {
             this.player.anims.play('Idle1', true);
         }
 
-        // Normalisation de la vitesse (évite de courir plus vite en diagonale)
         if (this.player.body.velocity.x !== 0 || this.player.body.velocity.y !== 0) {
-            this.player.body.velocity.normalize().scale(speed); // normalize() ajuste la vitesse pour que la magnitude soit de 1, puis scale(speed) multiplie cette magnitude par la vitesse souhaitée
+            this.player.body.velocity.normalize().scale(speed); 
         }
+    }
+
+    // --- FONCTION POUR LA BULLE ---
+    afficherBulleIntroduction(message) {
+        let bulleConteneur = this.add.container(this.player.x, this.player.y - 60);
+
+        let texte = this.add.text(0, 0, message, {
+            fontSize: '14px',
+            fill: '#000000',
+            wordWrap: { width: 180 },
+            align: 'center'
+        }).setOrigin(0.5);
+
+        let bg = this.add.graphics();
+        bg.fillStyle(0xffffff, 1);
+        bg.lineStyle(2, 0x000000, 1);
+        bg.fillRoundedRect(-(texte.width/2 + 10), -(texte.height/2 + 10), texte.width + 20, texte.height + 20, 10);
+        bg.strokeRoundedRect(-(texte.width/2 + 10), -(texte.height/2 + 10), texte.width + 20, texte.height + 20, 10);
+
+        bulleConteneur.add([bg, texte]);
+        bulleConteneur.setDepth(100);
+
+        const suivreJoueur = this.time.addEvent({
+            delay: 10,
+            callback: () => {
+                if(bulleConteneur) {
+                    bulleConteneur.x = this.player.x;
+                    bulleConteneur.y = this.player.y - 60;
+                }
+            },
+            loop: true
+        });
+
+        // Modifié à 10000ms (10 secondes)
+        this.time.delayedCall(10000, () => {
+            suivreJoueur.remove();
+            if(bulleConteneur) bulleConteneur.destroy();
+        });
     }
 }
