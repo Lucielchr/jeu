@@ -30,9 +30,19 @@ export class Jungle extends Phaser.Scene {
         this.load.spritesheet("heroIdle", "src/asset/hero-idle.png", { frameWidth: 160, frameHeight: 90 });
         this.load.spritesheet("heroRun", "src/asset/hero-run.png", { frameWidth: 160, frameHeight: 90 });
         this.load.spritesheet("heroJump", "src/asset/hero-jump.png", { frameWidth: 160, frameHeight: 90 });
+
+        // --- AJOUT : CHARGEMENT DU SON ---
+        // On charge le fichier audio spécifique à la jungle
+        this.load.audio("sonJungle", "src/asset/son_jungle.mp3");
     }
 
     create() {
+        // --- AJOUT : LANCEMENT DU SON ---
+        // On crée l'objet sonore en boucle pour l'ambiance
+        this.ambianceJungle = this.sound.add("sonJungle", { loop: true, volume: 0.5 });
+        // On lance la lecture
+        this.ambianceJungle.play();
+
         // 1. Initialisation des variables d'état (propres à cette scène)
         this.hasSword = false;      // Le joueur porte-t-il l'épée actuellement ?
         this.swordSpawned = false;  // L'épée est-elle déjà sortie du coffre ?
@@ -197,6 +207,11 @@ export class Jungle extends Phaser.Scene {
                 // On ne peut sortir que si on a trouvé l'épée
                 if (this.hasSword) {
                     this.registry.set('hasEpee', true); // Sauvegarde globale de l'épée
+                    
+                    // --- AJOUT : SÉCURITÉ SONORE ---
+                    // On arrête le son de la jungle juste avant de changer de scène
+                    this.ambianceJungle.stop();
+                    
                     this.scene.start('Hub');           // Retour au Hub
                 }
             });
