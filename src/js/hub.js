@@ -19,9 +19,19 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
         // 3. Le personnage
         // Charge la planche de sprites du joueur en découpant des cadres de 32x32 pixels
         this.load.spritesheet('player', 'src/asset/Male 16-1.png', { frameWidth: 32, frameHeight: 32 });
+
+        // --- AJOUT : CHARGEMENT DU SON ---
+        // On charge le fichier audio et on lui donne un nom clé ('ambiance-oiseaux')
+        this.load.audio('ambiance-oiseaux', './src/asset/son_oiseaux.mp3');
     }
 
     create() {
+        // --- AJOUT : LANCEMENT DU SON ---
+        // On crée l'objet sonore et on active l'option 'loop' pour qu'il recommence à l'infini
+        this.musiqueAmbiance = this.sound.add('ambiance-oiseaux', { loop: true, volume: 0.5 });
+        // On joue le son
+        this.musiqueAmbiance.play();
+
         // Création de la map à partir du JSON chargé dans le preload
         const map = this.make.tilemap({ key: 'map-hub' });
 
@@ -173,6 +183,8 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
             this.texteAide.setText("Appuie sur E pour entrer au Niveau 1");
             this.texteAide.setVisible(true);
             if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                // --- AJOUT : On stoppe le son avant de changer de scène ---
+                this.musiqueAmbiance.stop();
                 this.scene.start('Champignon1');
             }
         }
@@ -184,6 +196,8 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
                 this.texteAide.setText("Appuie sur E pour entrer au Niveau 2");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                    // --- AJOUT : On stoppe le son avant de changer de scène ---
+                    this.musiqueAmbiance.stop();
                     this.scene.start('Jungle');
                 }
             } else {
@@ -213,6 +227,8 @@ export class Hub extends Phaser.Scene { // Déclare la classe "Hub" qui hérite 
                 this.texteAide.setText("Le passage est libre ! Appuie sur E pour entrer au Niveau 3");
                 this.texteAide.setVisible(true);
                 if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+                    // --- AJOUT : On stoppe le son avant de changer de scène ---
+                    this.musiqueAmbiance.stop();
                     this.scene.start('Demon');
                 }
             }
