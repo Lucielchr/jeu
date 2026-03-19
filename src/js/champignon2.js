@@ -142,6 +142,12 @@ export class Champignon2 extends Phaser.Scene {
         // setBoundsCollision : Active les murs à gauche, droite et haut, mais pas en bas (pour tomber)
         this.physics.world.setBoundsCollision(true, true, true, false);
         this.isExiting = false; // Variable pour éviter de lancer le changement de scène en boucle
+
+        // --- AJOUT : MESSAGE D'ACCUEIL ---
+        // On attend 1.5s (après le fondu au noir) pour afficher le message
+        this.time.delayedCall(1500, () => {
+            this.afficherBulleAlerte(this.cameras.main.centerX, 500, "Essaye d'appuyer sur A !");
+        });
     }
 
     // update : Boucle logique lancée 60 fois par seconde
