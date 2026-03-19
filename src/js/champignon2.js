@@ -65,8 +65,8 @@ export class Champignon2 extends Phaser.Scene {
         // --- BLOCS SOLIDES À DÉTRUIRE ---
         // group : Crée un ensemble d'objets qu'on pourra gérer d'un coup (les blocs)
         this.blocks = this.physics.add.group();
-        for (let i = 0; i < 5; i++) {
-            // On crée 5 blocs empilés les uns sur les autres
+        for (let i = 0; i < 6; i++) {
+            // On crée 6 blocs empilés les uns sur les autres
             let b = this.blocks.create(1400, 280 - (i * 40), 'bloc_img');
             // setImmovable : Le bloc ne bouge pas quand on lui fonce dessus
             b.setDisplaySize(40, 40).setImmovable(true);
