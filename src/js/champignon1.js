@@ -80,6 +80,7 @@ export class Champignon1 extends Phaser.Scene {
             if (this.vientDuTuyau) {
                 this.registry.set('hasCisaille', true);
                 this.afficherBulle(400, 300, "Cisaille récupérée ! Retour au Hub...");
+                if (this.bgMusic) this.bgMusic.stop();
                 this.time.delayedCall(2000, () => { this.scene.start('Hub'); });
             } else {
                 this.afficherBulle(400, 300, "Le donjon est fermé, trouve la cisaille !");
